@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'My Goals',
-      home: MyGoals(title: 'Мои цели'),
+      home: MyGoals(),
     );
   }
 }
