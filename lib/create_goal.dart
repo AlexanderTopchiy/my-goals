@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:my_goals/data/model/goal.dart';
 
@@ -9,6 +12,10 @@ class CreateGoal extends StatefulWidget {
 
 class _CreateGoalState extends State<CreateGoal> {
   final _goalNameController = TextEditingController();
+  String _goalName;
+  String _goalDateText = 'Дата';
+  DateTime _goalDate;
+  DateTime _datePickerStartDate = DateTime.now();
 
   @override
   void dispose() {
@@ -17,12 +24,28 @@ class _CreateGoalState extends State<CreateGoal> {
   }
 
   void _createGoal() {
-    String _goalName = _goalNameController.text;
+    _goalName = _goalNameController.text;
     if (_goalName.isNotEmpty) {
       Navigator.of(context).pop(
-          Goal(_goalName, 10)
+          Goal(_goalName, _goalDate.millisecondsSinceEpoch)
       );
     }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    _goalDate = await showDatePicker(
+      context: context,
+      initialDate: _datePickerStartDate,
+      firstDate: DateTime(2019),
+      lastDate: DateTime(2100),
+    );
+
+    _datePickerStartDate = _goalDate;
+
+    setState(() {
+      DateFormat dateFormat = DateFormat('dd.MM.yyyy');
+      _goalDateText = dateFormat.format(_goalDate);
+    });
   }
 
   @override
@@ -51,6 +74,20 @@ class _CreateGoalState extends State<CreateGoal> {
                 },
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+              child: GestureDetector(
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: _goalDateText,
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                onTap: () => _selectDate(context),
               ),
             ),
             Container(

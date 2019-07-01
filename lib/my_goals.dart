@@ -21,6 +21,7 @@ class _MyGoalsState extends State<MyGoals> {
       itemCount: _goalsRepository.getGoalsList().length,
       itemBuilder: (context, position) => ListTile(
         title: Text(_goalsRepository.getGoalsList()[position].goalName),
+        subtitle: Text(_goalsRepository.getGoalsList()[position].goalDate.toString()),
       ),
     );
   }
