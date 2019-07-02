@@ -23,9 +23,9 @@ class _CreateGoalState extends State<CreateGoal> {
     super.dispose();
   }
 
-  void _createGoal() {
+  void _createGoal(BuildContext context) {
     _goalName = _goalNameController.text;
-    if (_goalName.isNotEmpty) {
+    if (_goalName.isNotEmpty && _goalDate != null) {
       Navigator.of(context).pop(
           Goal(_goalName, _goalDate.millisecondsSinceEpoch)
       );
@@ -40,12 +40,13 @@ class _CreateGoalState extends State<CreateGoal> {
       lastDate: DateTime(2100),
     );
 
-    _datePickerStartDate = _goalDate;
+    if (_goalDate != null) {
+      _datePickerStartDate = _goalDate;
 
-    setState(() {
-      DateFormat dateFormat = DateFormat('dd.MM.yyyy');
-      _goalDateText = dateFormat.format(_goalDate);
-    });
+      setState(() {
+        _goalDateText = DateFormat('dd.MM.yyyy').format(_goalDate);
+      });
+    }
   }
 
   @override
@@ -96,7 +97,7 @@ class _CreateGoalState extends State<CreateGoal> {
                 minWidth: double.infinity,
                 height: 50,
                 child: RaisedButton(
-                  onPressed: () => _createGoal(),
+                  onPressed: () => _createGoal(context),
                   color: Colors.blue,
                   textColor: Colors.white,
                   child: Text(
