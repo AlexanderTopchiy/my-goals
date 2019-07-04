@@ -15,7 +15,7 @@ class MyGoals extends StatefulWidget {
 
 class _MyGoalsState extends State<MyGoals> {
   bool _isListEmpty = true;
-  num _currentTime;
+  int _currentTime;
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _MyGoalsState extends State<MyGoals> {
     Timer.periodic(
       fps,
       (Timer timer) => setState(() {
-        _currentTime++;
+        _currentTime += 50;
       }),
     );
   }
@@ -33,11 +33,26 @@ class _MyGoalsState extends State<MyGoals> {
     return ListView.builder(
       itemCount: _goalsRepository.getGoalsList().length,
       itemBuilder: (context, position) {
-        String _name = _goalsRepository.getGoalsList()[position].goalName;
-        num _date = _goalsRepository.getGoalsList()[position].goalDate;
+        String timeRemaining;
+        String name = _goalsRepository.getGoalsList()[position].goalName;
+        int date = _goalsRepository.getGoalsList()[position].goalDate;
+        int expiryTime = date - _currentTime;
+        if (expiryTime < 100) {
+          timeRemaining = 'Дата цели достигнута!';
+        } else {
+          int seconds = expiryTime ~/ 1000;
+          int minutes = seconds ~/ 60;
+          int hours = minutes ~/ 60;
+          int days = hours ~/ 24;
+          timeRemaining = 'Осталось $days дн. и '
+              '${hours % 24}'
+              ':${minutes % 60}'
+              ':${seconds % 60}'
+              ':${expiryTime % 1000}';
+        }
         return ListTile(
-          title: Text('$_name'),
-          subtitle: Text('${_date - _currentTime}'),
+          title: Text('$name'),
+          subtitle: Text('$timeRemaining'),
         );
       }
     );
