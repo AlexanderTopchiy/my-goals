@@ -13,13 +13,14 @@ class CreateGoal extends StatefulWidget {
 class _CreateGoalState extends State<CreateGoal> {
   final _goalNameController = TextEditingController();
   String _goalName;
-  String _goalDateText = 'Дата';
+  final _goalDateController = TextEditingController();
   DateTime _goalDate;
   DateTime _datePickerStartDate = DateTime.now();
 
   @override
   void dispose() {
     _goalNameController.dispose();
+    _goalDateController.dispose();
     super.dispose();
   }
 
@@ -44,7 +45,7 @@ class _CreateGoalState extends State<CreateGoal> {
       _datePickerStartDate = _goalDate;
 
       setState(() {
-        _goalDateText = DateFormat('dd.MM.yyyy').format(_goalDate);
+        _goalDateController.text = DateFormat('dd.MM.yyyy').format(_goalDate);
       });
     }
   }
@@ -52,6 +53,7 @@ class _CreateGoalState extends State<CreateGoal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Создать цель'),
@@ -67,6 +69,7 @@ class _CreateGoalState extends State<CreateGoal> {
                   labelText: 'Название твоей цели',
                   border: OutlineInputBorder(),
                 ),
+                autovalidate: true,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Введите название цели';
@@ -82,10 +85,18 @@ class _CreateGoalState extends State<CreateGoal> {
               child: GestureDetector(
                 child: AbsorbPointer(
                   child: TextFormField(
+                    controller: _goalDateController,
                     decoration: InputDecoration(
-                      labelText: _goalDateText,
+                      labelText: 'Дата',
                       border: OutlineInputBorder(),
                     ),
+                    autovalidate: true,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Выберите дату';
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 onTap: () => _selectDate(context),

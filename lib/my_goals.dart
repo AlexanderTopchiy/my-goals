@@ -1,4 +1,4 @@
-import 'dart:async' show Future;
+import 'dart:async' show Future, Timer;
 
 import 'package:flutter/material.dart';
 
@@ -15,14 +15,31 @@ class MyGoals extends StatefulWidget {
 
 class _MyGoalsState extends State<MyGoals> {
   bool _isListEmpty = true;
+  num _currentTime;
+
+  @override
+  void initState() {
+    _currentTime = DateTime.now().millisecondsSinceEpoch;
+    Duration fps = Duration(milliseconds: 50);
+    Timer.periodic(
+      fps,
+      (Timer timer) => setState(() {
+        _currentTime++;
+      }),
+    );
+  }
 
   Widget _initGoalsListView() {
     return ListView.builder(
       itemCount: _goalsRepository.getGoalsList().length,
-      itemBuilder: (context, position) => ListTile(
-        title: Text(_goalsRepository.getGoalsList()[position].goalName),
-        subtitle: Text(_goalsRepository.getGoalsList()[position].goalDate.toString()),
-      ),
+      itemBuilder: (context, position) {
+        String _name = _goalsRepository.getGoalsList()[position].goalName;
+        num _date = _goalsRepository.getGoalsList()[position].goalDate;
+        return ListTile(
+          title: Text('$_name'),
+          subtitle: Text('${_date - _currentTime}'),
+        );
+      }
     );
   }
 
