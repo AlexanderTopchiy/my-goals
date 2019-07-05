@@ -12,7 +12,6 @@ class CreateGoal extends StatefulWidget {
 
 class _CreateGoalState extends State<CreateGoal> {
   final _goalNameController = TextEditingController();
-  String _goalName;
   final _goalDateController = TextEditingController();
   DateTime _goalDate;
   DateTime _datePickerStartDate = DateTime.now();
@@ -25,10 +24,10 @@ class _CreateGoalState extends State<CreateGoal> {
   }
 
   void _createGoal(BuildContext context) {
-    _goalName = _goalNameController.text;
-    if (_goalName.isNotEmpty && _goalDate != null) {
+    String goalName = _goalNameController.text;
+    if (goalName.isNotEmpty && _goalDate != null) {
       Navigator.of(context).pop(
-          Goal(_goalName, _goalDate.millisecondsSinceEpoch)
+          Goal(goalName, _goalDate.millisecondsSinceEpoch)
       );
     }
   }
@@ -53,72 +52,75 @@ class _CreateGoalState extends State<CreateGoal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Создать цель'),
       ),
       body: Center(
-        child: Column(
+        child: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextFormField(
-                controller: _goalNameController,
-                decoration: InputDecoration(
-                  labelText: 'Название твоей цели',
-                  border: OutlineInputBorder(),
-                ),
-                autovalidate: true,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Введите название цели';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.text,
-                textCapitalization: TextCapitalization.sentences,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
-              child: GestureDetector(
-                child: AbsorbPointer(
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
                   child: TextFormField(
-                    controller: _goalDateController,
+                    controller: _goalNameController,
                     decoration: InputDecoration(
-                      labelText: 'Дата',
+                      labelText: 'Название твоей цели',
                       border: OutlineInputBorder(),
                     ),
                     autovalidate: true,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Выберите дату';
+                        return 'Введите название цели';
                       }
                       return null;
                     },
+                    keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.sentences,
                   ),
                 ),
-                onTap: () => _selectDate(context),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 20.0, right: 20.0),
-              child: ButtonTheme(
-                minWidth: double.infinity,
-                height: 50,
-                child: RaisedButton(
-                  onPressed: () => _createGoal(context),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  child: Text(
-                    'СОЗДАТЬ',
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+                  child: GestureDetector(
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        controller: _goalDateController,
+                        decoration: InputDecoration(
+                          labelText: 'Дата',
+                          border: OutlineInputBorder(),
+                        ),
+                        autovalidate: true,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Выберите дату';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    onTap: () => _selectDate(context),
                   ),
                 ),
-              ),
+                Container(
+                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: ButtonTheme(
+                    minWidth: double.infinity,
+                    height: 50,
+                    child: RaisedButton(
+                      onPressed: () => _createGoal(context),
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      child: Text(
+                        'СОЗДАТЬ',
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

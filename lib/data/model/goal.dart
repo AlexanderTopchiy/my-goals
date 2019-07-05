@@ -1,9 +1,6 @@
 class Goal {
-  String _goalName;
-  num _goalDate;
+  final String goalName;
+  final num goalDate;
 
-  Goal(this._goalName, this._goalDate);
-
-  String get goalName => _goalName;
-  num get goalDate => _goalDate;
+  Goal(this.goalName, this.goalDate);
 }
