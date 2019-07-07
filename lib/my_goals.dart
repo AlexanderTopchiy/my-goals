@@ -14,6 +14,15 @@ class MyGoals extends StatefulWidget {
 }
 
 class _MyGoalsState extends State<MyGoals> {
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(
+      Duration(milliseconds: 50),
+      (Timer timer) => setState(() {})
+    );
+  }
+
   Widget _initGoalsListView() {
     return ListView.builder(
         itemCount: _goalsRepository.getGoalsList().length,
@@ -22,10 +31,6 @@ class _MyGoalsState extends State<MyGoals> {
           String name = _goalsRepository.getGoalsList()[position].goalName;
           int date = _goalsRepository.getGoalsList()[position].goalDate;
           int expiryTime = date - DateTime.now().millisecondsSinceEpoch;
-          Timer.periodic(
-              Duration(milliseconds: 50),
-              (Timer timer) => setState(() {})
-          );
           if (expiryTime < 100) {
             timeRemaining = 'Дата цели достигнута!';
           } else {
